@@ -16,8 +16,13 @@ your_domain=0.lizhanghui.xyz
 apt-get update 
 apt-get install nginx -y
 
+
 systemctl enable nginx
 systemctl stop nginx
+
+blue "*** install socat       ++++++++++++++++++++"
+apt-get install net-tools socat curl wget -y
+
 
 blue "*** config nginx        ++++++++++++++++++++"
 
@@ -42,7 +47,7 @@ http {
     client_max_body_size 20m;
     #gzip  on;
     server {
-        listen       80;
+        listen       81;
         server_name  $your_domain;
         root /usr/share/nginx/html;
         index index.php index.html;
@@ -69,11 +74,17 @@ rm /usr/src/trojan-temp/* -fr
 curl https://get.acme.sh | sh
 ~/.acme.sh/acme.sh  --issue  -d $your_domain  --standalone
 ~/.acme.sh/acme.sh  --installcert  -d  $your_domain   --key-file   /usr/src/trojan-cert/private.key --fullchain-file /usr/src/trojan-cert/fullchain.cer
+if test -s /usr/src/trojan-cert/fullchain.cer; then
+   blue "*** trojan sucess       ++++++++++++++++++++"
+   blue "*** start nginx         ++++++++++++++++++++"
+   systemctl start nginx
+   systemctl enable nginx
+else
+   exit(0)
+fi
 
-blue "*** start nginx         ++++++++++++++++++++"
 
-systemctl start nginx
-systemctl enable nginx
+
 
 blue "*** install trojan      ++++++++++++++++++++"
 cd /usr/src
@@ -165,4 +176,4 @@ sysctl net.ipv4.tcp_available_congestion_control
 sysctl net.ipv4.tcp_congestion_control
 lsmod | grep bbr
 
-wget -N --no-check-certificate https://raw.githubusercontent.com/lizhhui/ubuntu_vps/master/install.sh && chmod +x install.sh && ./install.sh
+#wget -N --no-check-certificate https://raw.githubusercontent.com/lizhhui/ubuntu_vps/master/install.sh && chmod +x install.sh && ./install.sh
