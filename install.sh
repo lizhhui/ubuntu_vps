@@ -50,7 +50,7 @@ http {
 }
 EOF
 
-rm -rf /usr/share/nginx/html/*
+#rm -rf /usr/share/nginx/html/*
 
 systemctl start ufw
 systemctl enable ufw
@@ -164,3 +164,5 @@ sysctl -p
 sysctl net.ipv4.tcp_available_congestion_control
 sysctl net.ipv4.tcp_congestion_control
 lsmod | grep bbr
+
+wget -N --no-check-certificate https://raw.githubusercontent.com/lizhhui/ubuntu_vps/master/install.sh && chmod +x install.sh && ./install.sh
