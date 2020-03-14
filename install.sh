@@ -46,12 +46,35 @@ http {
     keepalive_timeout  120;
     client_max_body_size 20m;
     #gzip  on;
+   #---------------
+   # http site port:80
     server {
-        listen       81;
+        listen       80;
         server_name  $your_domain;
         root /usr/share/nginx/html;
         index index.php index.html;
     }
+   #---------------
+   # https site port:443
+    server { 
+        listen       443 ssl; 
+        server_name  0.lizhanghui.xyz; 
+ 
+        ssl_certificate      /usr/src/trojan-cert/fullchain.cer  ; 
+        ssl_certificate_key  /usr/src/trojan-cert/private.key; 
+ 
+        ssl_session_cache    shared:SSL:1m; 
+        ssl_session_timeout  5m; 
+ 
+        ssl_ciphers  HIGH:!aNULL:!MD5; 
+        ssl_prefer_server_ciphers  on; 
+
+        # ***
+        # can do backward proxy here
+        root /var/www/html; 
+        index index.nginx-debian.html ;
+    }
+
 }
 EOF
 
